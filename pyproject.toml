@@ -48,7 +48,4 @@ warn_unreachable = true
 exclude = ["venv/*"]
 
 [[tool.mypy.overrides]]
-module = [
-    "matplotlib.*",
-]
 ignore_missing_imports = true

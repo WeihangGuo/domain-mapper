@@ -81,12 +81,12 @@ def _main() -> None:
         git_config_file = git_repo / "config"
         with open(git_config_file, "r", encoding="utf-8") as fp:
             git_config_contents = fp.read()
-        if "git@github.com:tomsilver/python-starter.git" in git_config_contents:
+        if "git@github.com:weihangguo/repo-init.git" in git_config_contents:
             shutil.rmtree(git_repo)
 
     # Initialize the repo anew.
     subprocess.run(["git", "init"], check=True, capture_output=True)
-    subprocess.run(["git", "checkout", "-b", "main"], check=True, capture_output=True)
+    # subprocess.run(["git", "checkout", "-b", "main"], check=True, capture_output=True)
     subprocess.run(["git", "add", "."], check=True, capture_output=True)
 
     # Check if the remote already exists (if this script is being run twice).
@@ -116,10 +116,10 @@ def _main() -> None:
 
     # Replace all occurrences of default names.
     substitutions = {
-        "Tom Silver": developer,
-        "tomsilver": github_username,
-        "python-starter": repo_name,
-        "python_starter": package_name,
+        "Weihang Guo": developer,
+        "weihangguo": github_username,
+        "repo-init": repo_name,
+        "repo-init": package_name,
         "3.10": f"3.{python_subversion}",
         "310": f"3{python_subversion}",
     }

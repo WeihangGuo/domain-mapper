@@ -5,7 +5,7 @@
 
 (define (domain TIDYBOT)
   (:requirements :strips :typing :equality)
-  (:types robot cart object xc yc xrel yrel)
+  (:types robot cart obj xc yc xrel yrel)
   (:predicates
    ;; Constant preds
    (leftof                   ?x1 - xc ?x2 - xc)
@@ -16,7 +16,7 @@
    (sum-y        ?y - yc ?yr - yrel ?ysum - yc)
    (zerox-rel    ?x - xrel)
    (zeroy-rel    ?y - yrel)
-   (object-goal  ?o - object ?x - xc  ?y - yc)
+   (obj-goal  ?o - obj ?x - xc  ?y - yc)
 
    ;; Robot base
    (parked       ?r - robot)
@@ -24,12 +24,12 @@
    (base-obstacle            ?x - xc  ?y - yc)
 
    ;; Objects
-   (object-pos   ?o - object ?x - xc  ?y - yc)
-   (object-done  ?o - object)
+   (obj-pos   ?o - obj ?x - xc  ?y - yc)
+   (obj-done  ?o - obj)
    (surface ?x - xc ?y - yc)
 
    ;; Gripper
-   (holding       ?r - robot ?o - object)
+   (holding       ?r - robot ?o - obj)
    (gripper-empty ?r - robot)
    (gripper-rel   ?r - robot ?x - xrel ?y - yrel)
    (gripper-obstacle         ?x - xc  ?y - yc)
@@ -39,7 +39,7 @@
    (not-pushing   ?r - robot)
    (not-pushed    ?c - cart)
    (cart-pos      ?c - cart ?x - xc ?y - yc)
-   (on-cart       ?o - object ?c - cart) 
+   (on-cart       ?o - obj ?c - cart) 
    )
 
   ;; Base movement actions
@@ -254,7 +254,7 @@
   (:action get-left
    :parameters (?r - robot ?basex - xc ?basey - yc
                 ?gxrel - xrel ?gxabs - xc ?gyrel - yrel ?gyabs - yc
-                ?o - object ?ox - xc)   
+                ?o - obj ?ox - xc)   
    :precondition (and (parked ?r)
                       (base-pos ?r ?basex ?basey)
                       (gripper-rel ?r ?gxrel ?gyrel)
@@ -262,8 +262,8 @@
                       (sum-y ?basey ?gyrel ?gyabs)
                       (gripper-empty ?r)
                       (leftof ?ox ?gxabs)
-                      (not (object-done ?o)) (object-pos ?o ?ox ?gyabs))
-   :effect       (and (not (object-pos ?o ?ox ?gyabs))
+                      (not (obj-done ?o)) (obj-pos ?o ?ox ?gyabs))
+   :effect       (and (not (obj-pos ?o ?ox ?gyabs))
                       (not (gripper-obstacle ?ox ?gyabs))
                       (not (gripper-empty ?r))
                       (holding ?r ?o))
@@ -272,7 +272,7 @@
   (:action get-right
    :parameters (?r - robot ?basex - xc ?basey - yc
                 ?gxrel - xrel ?gxabs - xc ?gyrel - yrel ?gyabs - yc
-                ?o - object ?ox - xc)   
+                ?o - obj ?ox - xc)   
    :precondition (and (parked ?r)
                       (base-pos ?r ?basex ?basey)
                       (gripper-rel ?r ?gxrel ?gyrel)
@@ -280,8 +280,8 @@
                       (sum-y ?basey ?gyrel ?gyabs)
                       (gripper-empty ?r)
                       (leftof ?gxabs ?ox)
-                      (not (object-done ?o)) (object-pos ?o ?ox ?gyabs))
-   :effect       (and (not (object-pos ?o ?ox ?gyabs))
+                      (not (obj-done ?o)) (obj-pos ?o ?ox ?gyabs))
+   :effect       (and (not (obj-pos ?o ?ox ?gyabs))
                       (not (gripper-obstacle ?ox ?gyabs))
                       (not (gripper-empty ?r))
                       (holding ?r ?o))
@@ -290,7 +290,7 @@
   (:action get-up
    :parameters (?r - robot ?basex - xc ?basey - yc
                 ?gxrel - xrel ?gxabs - xc ?gyrel - yrel ?gyabs - yc
-                ?o - object ?oy - yc)   
+                ?o - obj ?oy - yc)   
    :precondition (and (parked ?r)
                       (base-pos ?r ?basex ?basey)
                       (gripper-rel ?r ?gxrel ?gyrel)
@@ -298,8 +298,8 @@
                       (sum-y ?basey ?gyrel ?gyabs)
                       (gripper-empty ?r)
                       (above ?oy ?gyabs)
-                      (not (object-done ?o)) (object-pos ?o ?gxabs ?oy))
-   :effect       (and (not (object-pos ?o ?gxabs ?oy))
+                      (not (obj-done ?o)) (obj-pos ?o ?gxabs ?oy))
+   :effect       (and (not (obj-pos ?o ?gxabs ?oy))
                       (not (gripper-obstacle ?gxabs ?oy))
                       (not (gripper-empty ?r))
                       (holding ?r ?o))
@@ -308,7 +308,7 @@
   (:action get-down
    :parameters (?r - robot ?basex - xc ?basey - yc
                 ?gxrel - xrel ?gxabs - xc ?gyrel - yrel ?gyabs - yc
-                ?o - object ?oy - yc)   
+                ?o - obj ?oy - yc)   
    :precondition (and (parked ?r)
                       (base-pos ?r ?basex ?basey)
                       (gripper-rel ?r ?gxrel ?gyrel)
@@ -316,8 +316,8 @@
                       (sum-y ?basey ?gyrel ?gyabs)
                       (gripper-empty ?r)
                       (above ?gyabs ?oy)
-                      (not (object-done ?o)) (object-pos ?o ?gxabs ?oy))
-   :effect       (and (not (object-pos ?o ?gxabs ?oy))
+                      (not (obj-done ?o)) (obj-pos ?o ?gxabs ?oy))
+   :effect       (and (not (obj-pos ?o ?gxabs ?oy))
                       (not (gripper-obstacle ?gxabs ?oy))
                       (not (gripper-empty ?r))
                       (holding ?r ?o))
@@ -325,7 +325,7 @@
 
   (:action get-from-cart
    :parameters (?r - robot ?x - xc ?y - yc ?gxrel - xrel 
-                ?gyrel - yrel ?o - object ?c - cart
+                ?gyrel - yrel ?o - obj ?c - cart
                 ?cx - xc ?cy - yc)
    :precondition (and (parked ?r) (base-pos ?r ?x ?y)
                       (gripper-rel ?r ?gxrel ?gyrel) (sum-x ?x ?gxrel ?cx)
@@ -337,7 +337,7 @@
   (:action put-left
    :parameters (?r - robot ?basex - xc ?basey - yc
                 ?gxrel - xrel ?gxabs - xc ?gyrel - yrel ?gyabs - yc
-                ?o - object ?ox - xc)   
+                ?o - obj ?ox - xc)   
    :precondition (and (parked ?r)
                       (base-pos ?r ?basex ?basey)
                       (gripper-rel ?r ?gxrel ?gyrel)
@@ -349,7 +349,7 @@
                       (surface ?ox ?gyabs)
                       )
    :effect       (and (not (holding ?r ?o))
-                      (object-pos ?o ?ox ?gyabs)
+                      (obj-pos ?o ?ox ?gyabs)
                       (gripper-obstacle ?ox ?gyabs)
                       (gripper-empty ?r)
                       )   
@@ -358,7 +358,7 @@
   (:action put-right
    :parameters (?r - robot ?basex - xc ?basey - yc
                 ?gxrel - xrel ?gxabs - xc ?gyrel - yrel ?gyabs - yc
-                ?o - object ?ox - xc)   
+                ?o - obj ?ox - xc)   
    :precondition (and (parked ?r)
                       (base-pos ?r ?basex ?basey)
                       (gripper-rel ?r ?gxrel ?gyrel)
@@ -370,7 +370,7 @@
                       (surface ?ox ?gyabs)
                       )
    :effect       (and (not (holding ?r ?o))
-                      (object-pos ?o ?ox ?gyabs)
+                      (obj-pos ?o ?ox ?gyabs)
                       (gripper-obstacle ?ox ?gyabs)
                       (gripper-empty ?r)
                       )   
@@ -379,7 +379,7 @@
   (:action put-up
    :parameters (?r - robot ?basex - xc ?basey - yc
                 ?gxrel - xrel ?gxabs - xc ?gyrel - yrel ?gyabs - yc
-                ?o - object ?oy - yc)   
+                ?o - obj ?oy - yc)   
    :precondition (and (parked ?r)
                       (base-pos ?r ?basex ?basey)
                       (gripper-rel ?r ?gxrel ?gyrel)
@@ -391,7 +391,7 @@
                       (surface ?gxabs ?oy)
                       )
    :effect       (and (not (holding ?r ?o))
-                      (object-pos ?o ?gxabs ?oy)
+                      (obj-pos ?o ?gxabs ?oy)
                       (gripper-obstacle ?gxabs ?oy)
                       (gripper-empty ?r)
                       )   
@@ -400,7 +400,7 @@
   (:action put-down
    :parameters (?r - robot ?basex - xc ?basey - yc
                 ?gxrel - xrel ?gxabs - xc ?gyrel - yrel ?gyabs - yc
-                ?o - object ?oy - yc)   
+                ?o - obj ?oy - yc)   
    :precondition (and (parked ?r)
                       (base-pos ?r ?basex ?basey)
                       (gripper-rel ?r ?gxrel ?gyrel)
@@ -412,7 +412,7 @@
                       (surface ?gxabs ?oy)
                       )
    :effect       (and (not (holding ?r ?o))
-                      (object-pos ?o ?gxabs ?oy)
+                      (obj-pos ?o ?gxabs ?oy)
                       (gripper-obstacle ?gxabs ?oy)
                       (gripper-empty ?r)
                       )   
@@ -420,7 +420,7 @@
 
   (:action put-on-cart
    :parameters (?r - robot ?x - xc ?y - yc ?gxrel - xrel 
-                ?gyrel - yrel ?o - object ?c - cart ?cx - xc ?cy - yc)
+                ?gyrel - yrel ?o - obj ?c - cart ?cx - xc ?cy - yc)
 
    :precondition (and (parked ?r) (base-pos ?r ?x ?y) (gripper-rel ?r ?gxrel ?gyrel)
                       (sum-x ?x ?gxrel ?cx) (sum-y ?y ?gyrel ?cy) (cart-pos ?c ?cx ?cy)
@@ -428,9 +428,9 @@
 
    :effect (and (not (holding ?r ?o)) (on-cart ?o ?c) (gripper-empty ?r)))
 
-  (:action finish-object
-   :parameters (?o - object ?x - xc ?y - yc)
-   :precondition (and (not (object-done ?o)) (object-pos ?o ?x ?y) (object-goal ?o ?x ?y))
-   :effect (and (object-done ?o)))
+  (:action finish-obj
+   :parameters (?o - obj ?x - xc ?y - yc)
+   :precondition (and (not (obj-done ?o)) (obj-pos ?o ?x ?y) (obj-goal ?o ?x ?y))
+   :effect (and (obj-done ?o)))
 )
 

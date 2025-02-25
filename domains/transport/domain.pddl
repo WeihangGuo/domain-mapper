@@ -2,7 +2,7 @@
 ;;
 
 (define (domain transport)
-  (:requirements :typing :action-costs)
+  (:requirements :typing :action-costs :numeric-fluents)
   (:types
         location target locatable - object
         vehicle package - locatable

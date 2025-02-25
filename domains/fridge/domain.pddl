@@ -12,7 +12,7 @@
 
 
 (define (domain fridge-domain)
-  (:requirements :strips :typing :quantified-preconditions)
+  (:requirements :strips :typing :quantified-preconditions :disjunctive-preconditions)
   (:types screw backplane compressor fridge)
   (:predicates (screwed ?s - screw)
 	       (attached ?c - compressor ?f - fridge)

@@ -1,5 +1,5 @@
 (define (domain elevators-sequencedstrips)
-  (:requirements :typing :action-costs)
+  (:requirements :typing :action-costs :numeric-fluents)
   (:types   elevator - object
             slow-elevator fast-elevator - elevator
             passenger - object

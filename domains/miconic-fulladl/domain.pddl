@@ -1,5 +1,5 @@
 (define (domain miconic)
-  (:requirements :adl)
+  (:requirements :adl :typing)
   (:types passenger - object
           going_up going_down vip
 	  going_nonstop attendant never_alone 

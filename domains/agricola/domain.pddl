@@ -4,7 +4,7 @@
 ;;        Universidad Carlos III of Madrid (2017)
 ;;
 (define (domain agricola)
-(:requirements :typing :action-costs :negative-preconditions)
+(:requirements :typing :action-costs :negative-preconditions :numeric-fluents)
 (:types
     actiontag goods stage round worker improvement roundclass phaseclass roundparts resource room num - object 
     buildtag animaltag vegtag gentag - actiontag

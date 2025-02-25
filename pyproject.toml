@@ -3,14 +3,15 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "python_starter"
+name = "domain_mapper"
 version = "0.1.0"
-description = "A basic starter for Python packages."
+description = "Map different domain"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
    "matplotlib",
    "numpy",
+   "pddl",
 ]
 
 [project.optional-dependencies]

@@ -158,7 +158,7 @@
 			  (has-paint spray-painter ?newpaint)
 			  (not (busy spray-painter))
 			  (not (scheduled ?x))
-			  (temperature ?x COLD))
+			  (temperature ?x cold))
 	   :effect (and
 		    (busy spray-painter)
 		    (scheduled ?x)
